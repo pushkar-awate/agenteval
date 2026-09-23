@@ -39,7 +39,7 @@ format adherence | guardrail pass rate | latency p50/p95 | est. cost | stability
 - [x] M0 - scaffold: evalcore (dataset/judges/runner/metrics), demo
   system-under-test + labelled cases, CLI, green tests.
 - [x] M1 - registry + regression gate (the eval-drift wedge).
-- [ ] M2 - LLMJudge (faithfulness/relevance) + guardrail/format metrics +
+- [x] M2 - LLMJudge (faithfulness/relevance) + guardrail/format metrics +
   latency/cost + response caching.
 - [ ] M3 - Streamlit dashboard (metric table, eval-drift chart, verdict, traces).
 - [ ] M4 - GitHub Actions eval + regression gate + badge.

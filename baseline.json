@@ -1,16 +1,22 @@
 {
   "version": "demo-v1",
-  "saved_at": "2026-09-23T05:18:38Z",
+  "saved_at": "2026-09-23T05:28:18Z",
   "scorecard": {
     "version": "demo-v1",
     "n_cases": 12,
     "task_success": 100,
     "per_judge_pass_rate": {
-      "exact_match": 100
+      "exact_match": 100,
+      "format": 100,
+      "guardrail": 100
     },
     "errors": 0,
     "latency_p50_ms": 0.01,
-    "latency_p95_ms": 0.06
+    "latency_p95_ms": 0.01,
+    "est_tokens": 0,
+    "est_cost_usd": 0.0,
+    "llm_calls": 0,
+    "llm_cache_hits": 0
   },
   "run": {
     "version": "demo-v1",
@@ -28,7 +34,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -45,7 +66,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -62,7 +98,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -79,7 +130,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -88,7 +154,7 @@
         "input": "I get a 500 error when I try to log in",
         "expected": "technical",
         "output": "technical",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
         "judgements": [
@@ -96,7 +162,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -113,7 +194,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -130,7 +226,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -139,7 +250,7 @@
         "input": "Please delete my account permanently",
         "expected": "account",
         "output": "account",
-        "latency_ms": 0.12,
+        "latency_ms": 0.01,
         "error": null,
         "passed": true,
         "judgements": [
@@ -147,7 +258,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -164,7 +290,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -181,7 +322,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -198,7 +354,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       },
@@ -215,7 +386,22 @@
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
-            "detail": ""
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "format",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
+          },
+          {
+            "name": "guardrail",
+            "score": 1.0,
+            "passed": true,
+            "detail": "",
+            "meta": {}
           }
         ]
       }

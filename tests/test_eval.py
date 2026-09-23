@@ -12,6 +12,10 @@ from evalcore.runner import run_eval
 from evalcore.metrics import scorecard
 from evalcore.registry import Registry
 from evalcore.gate import regression_gate
+from evalcore.judges import (LLMJudge, FormatAdherence, GuardrailJudge,
+                             faithfulness_judge)
+from evalcore.cache import JSONLCache
+from agentcore.brain import MockBrain
 from app.demo_target import classify
 
 
@@ -110,6 +114,72 @@ def test_gate_tolerance():
     print("PASS: gate tolerance  (5pt drop fails at tol=0, passes at tol=5)")
 
 
+class _CountingStubBrain(MockBrain):
+    """A no-network LLM stand-in: returns a fixed JSON judgement and counts how
+    many times complete() actually runs (to prove caching skips calls)."""
+    def __init__(self, score=90):
+        super().__init__()
+        self.calls = 0
+        self._score = score
+    def complete(self, prompt):
+        self.calls += 1
+        return '```json\n{"score": %d, "reason": "looks faithful"}\n```' % self._score
+
+
+def test_llm_judge_with_stub_and_cache():
+    import tempfile, os as _os
+    c = EvalCase("1", "Why was I charged twice?", expected="billing")
+    tmp = tempfile.mkdtemp()
+    try:
+        cache = JSONLCache(path=_os.path.join(tmp, "judge_cache.jsonl"))
+        brain = _CountingStubBrain(score=90)
+        judge = faithfulness_judge(brain, cache=cache)
+        j1 = judge.score(c, "This is a billing problem.")
+        assert j1.passed and abs(j1.score - 0.9) < 1e-6, "stub score 90 -> 0.9, pass"
+        assert j1.meta.get("est_tokens", 0) > 0
+        assert brain.calls == 1
+        # second identical score must hit the cache, not the brain
+        j2 = judge.score(c, "This is a billing problem.")
+        assert j2.passed and brain.calls == 1, "cache should prevent a second call"
+        assert j2.meta.get("cached") is True
+        # a fresh cache object reads the persisted file
+        assert len(JSONLCache(path=cache.path)) == 1
+        print("PASS: LLM judge via stub + response caching (1 call, cache hit on repeat)")
+    finally:
+        import shutil; shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_llm_judge_abstains_on_mock_brain():
+    c = EvalCase("1", "x", expected="billing")
+    j = faithfulness_judge(MockBrain()).score(c, "anything")
+    assert (not j.passed) and j.meta.get("abstained"), "MockBrain -> judge abstains"
+    print("PASS: LLM judge abstains on the key-free MockBrain")
+
+
+def test_format_and_guardrail_judges():
+    labels = FormatAdherence(r"billing|technical|account|shipping|other", name="format")
+    c = EvalCase("1", "x", expected="billing")
+    assert labels.score(c, "billing").passed
+    assert not labels.score(c, "totally invalid label").passed
+    g = GuardrailJudge()
+    assert g.score(c, "billing").passed
+    assert not g.score(c, "").passed, "empty output fails the guardrail"
+    assert not g.score(c, "As an AI language model, I cannot help").passed
+    print("PASS: format-adherence + guardrail judges")
+
+
+def test_cost_estimate_in_scorecard():
+    cases = _cases()[:3]
+    brain = _CountingStubBrain(score=80)
+    run = run_eval(classify, cases, [ExactMatch(), faithfulness_judge(brain)])
+    card = scorecard(run, price_per_1k_tokens=0.5)
+    assert card["llm_calls"] == len(cases), "one LLM-judge call per case"
+    assert card["est_tokens"] > 0 and card["est_cost_usd"] > 0
+    assert "faithfulness" in card["per_judge_pass_rate"]
+    print("PASS: cost estimate  (%d llm calls, ~%d tok, $%.4f)"
+          % (card["llm_calls"], card["est_tokens"], card["est_cost_usd"]))
+
+
 if __name__ == "__main__":
     test_judges()
     test_runner_and_scorecard()
@@ -119,4 +189,8 @@ if __name__ == "__main__":
     test_gate_passes_when_not_worse()
     test_gate_blocks_regression()
     test_gate_tolerance()
+    test_llm_judge_with_stub_and_cache()
+    test_llm_judge_abstains_on_mock_brain()
+    test_format_and_guardrail_judges()
+    test_cost_estimate_in_scorecard()
     print("\nAll tests passed.")

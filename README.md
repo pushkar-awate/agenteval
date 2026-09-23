@@ -34,12 +34,16 @@ latency p95  : 0.0 ms
 1. **Dataset** - eval cases (input, expected/rubric) as JSONL.
 2. **Runner** - runs any `target(input) -> output` over the cases, times each
    call, and records a crashing target as a failed case (never a crash).
-3. **Judges** - score each `(case, output)`: `ExactMatch`, `Contains`, `Regex`
-   today (deterministic, no key); an LLM-as-judge and embedding judge next.
-4. **Metrics** - aggregate into a scorecard: task success, per-judge pass rate,
-   latency p50/p95.
+3. **Judges** - score each `(case, output)`. A deterministic family needs no
+   key: `ExactMatch`, `Contains`, `Regex`, `FormatAdherence` and a
+   `GuardrailJudge` (guardrail pass rate). An **LLM-as-judge** (`--llm`) adds
+   faithfulness and relevance, reusing agentcore's Brain and caching every
+   answer so re-runs don't re-bill; an embedding judge comes next.
+4. **Metrics** - aggregate into a scorecard: task success, per-judge pass rate
+   (incl. format adherence and guardrail pass rate), latency p50/p95, and an
+   estimated token cost when an LLM judge runs.
 
-The **brain is task-agnostic**: a pluggable reasoning backend that is deterministic and key-free by default, and swaps to a real hosted LLM via `complete(prompt)` - which is what the LLM-as-judge will call to score an answer. No agent- or app-specific logic lives in the shared core.
+The **brain is task-agnostic**: a pluggable reasoning backend that is deterministic and key-free by default, and swaps to a real hosted LLM via `complete(prompt)` - which is what the LLM-as-judge calls to score an answer. No agent- or app-specific logic lives in the shared core.
 
 The engine knows nothing about the agent it scores - swap the `target` and the
 same runner, judges and metrics evaluate a different system. It is built on the
@@ -90,6 +94,7 @@ tests/         runnable with plain python (no pytest)
 SPEC.md        full spec and build checklist
 ```
 
-The registry and regression gate are in (M1). See `SPEC.md` for what's next:
-LLM-as-judge (faithfulness/relevance), a Streamlit dashboard, and a GitHub
-Actions eval gate. Core is pure standard library; Python 3.8+.
+The registry + regression gate (M1) and the LLM-as-judge, format/guardrail
+metrics and response caching (M2) are in. See `SPEC.md` for what's next: a
+Streamlit dashboard (M3) and a GitHub Actions eval gate (M4). The core is pure
+standard library; the LLM judge is opt-in via `--llm` and a free `GROQ_API_KEY`.

@@ -32,16 +32,21 @@ def _est_tokens(text):
 
 
 class Judgement:
-    def __init__(self, name, score, passed, detail="", meta=None):
+    def __init__(self, name, score, passed, detail="", meta=None, applicable=True):
         self.name = name
         self.score = float(score)
         self.passed = bool(passed)
+        # applicable=False means this judge could not render a verdict (e.g. an
+        # LLM judge whose call failed). It is neutral: excluded from task success
+        # and from pass-rate denominators, never counted as a failure.
+        self.applicable = bool(applicable)
         self.detail = detail
         self.meta = meta or {}
 
     def to_dict(self):
         return {"name": self.name, "score": self.score, "passed": self.passed,
-                "detail": self.detail, "meta": self.meta}
+                "applicable": self.applicable, "detail": self.detail,
+                "meta": self.meta}
 
 
 class Judge:
@@ -171,20 +176,30 @@ class LLMJudge(Judge):
             raw = self.brain.complete(prompt) or ""
             if self.cache and key and raw:
                 self.cache.put(key, raw)
-        if not raw:                       # MockBrain / failed call -> abstain
+        if not raw:                       # MockBrain / failed call -> abstain (neutral)
             return Judgement(self.name, 0.0, False,
                              "no LLM response (this judge needs a real brain)",
-                             meta={"abstained": True})
+                             meta={"abstained": True}, applicable=False)
         try:
             d = json.loads(extract_json(raw))
-            score = max(0.0, min(1.0, float(d.get("score", 0)) / 100.0))
+            raw_score = float(d.get("score", 0))
+            # accept either a 0-100 scale (the asked-for format) or a 0-1 scale
+            # some models return anyway; <=1 is read as a fraction, else /100.
+            score = raw_score if raw_score <= 1.0 else raw_score / 100.0
+            score = max(0.0, min(1.0, score))
             passed = score >= self.threshold
-            return Judgement(self.name, score, passed, str(d.get("reason", ""))[:200],
-                             meta={"cached": cached,
-                                   "est_tokens": _est_tokens(prompt) + _est_tokens(raw)})
+            # tokens/cost count only a REAL call, not a cache hit (the cache's
+            # whole point is not to re-bill).
+            meta = {"cached": cached}
+            if not cached:
+                meta["est_tokens"] = _est_tokens(prompt) + _est_tokens(raw)
+            return Judgement(self.name, score, passed,
+                             str(d.get("reason", ""))[:200], meta=meta)
         except Exception:
+            # an unparseable response is not a failed agent - it is a failed
+            # judgement. Neutral, so a broken judge never fakes a regression.
             return Judgement(self.name, 0.0, False, "unparseable LLM response",
-                             meta={"cached": cached})
+                             meta={"cached": cached}, applicable=False)
 
 
 def faithfulness_judge(brain, cache=None, threshold=0.6):

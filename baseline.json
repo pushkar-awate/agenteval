@@ -1,9 +1,11 @@
 {
   "version": "demo-v1",
-  "saved_at": "2026-09-23T05:28:18Z",
+  "saved_at": "2026-09-23T05:39:27Z",
   "scorecard": {
     "version": "demo-v1",
     "n_cases": 12,
+    "evaluated_cases": 12,
+    "unevaluated_cases": 0,
     "task_success": 100,
     "per_judge_pass_rate": {
       "exact_match": 100,
@@ -11,7 +13,7 @@
       "guardrail": 100
     },
     "errors": 0,
-    "latency_p50_ms": 0.01,
+    "latency_p50_ms": 0.0,
     "latency_p95_ms": 0.01,
     "est_tokens": 0,
     "est_cost_usd": 0.0,
@@ -26,14 +28,16 @@
         "input": "I want a refund for last month's invoice",
         "expected": "billing",
         "output": "billing",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -41,6 +45,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -48,6 +53,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -61,11 +67,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -73,6 +81,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -80,6 +89,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -93,11 +103,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -105,6 +117,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -112,6 +125,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -125,11 +139,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -137,6 +153,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -144,6 +161,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -157,11 +175,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -169,6 +189,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -176,6 +197,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -189,11 +211,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -201,6 +225,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -208,6 +233,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -221,11 +247,13 @@
         "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -233,6 +261,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -240,6 +269,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -250,14 +280,16 @@
         "input": "Please delete my account permanently",
         "expected": "account",
         "output": "account",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -265,6 +297,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -272,6 +305,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -282,14 +316,16 @@
         "input": "Where is my package? It hasn't arrived yet",
         "expected": "shipping",
         "output": "shipping",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -297,6 +333,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -304,6 +341,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -314,14 +352,16 @@
         "input": "Can you track my order status?",
         "expected": "shipping",
         "output": "shipping",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -329,6 +369,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -336,6 +377,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -349,11 +391,13 @@
         "latency_ms": 0.01,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -361,6 +405,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -368,6 +413,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }
@@ -378,14 +424,16 @@
         "input": "What are your office hours?",
         "expected": "other",
         "output": "other",
-        "latency_ms": 0.01,
+        "latency_ms": 0.0,
         "error": null,
         "passed": true,
+        "evaluated": true,
         "judgements": [
           {
             "name": "exact_match",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -393,6 +441,7 @@
             "name": "format",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           },
@@ -400,6 +449,7 @@
             "name": "guardrail",
             "score": 1.0,
             "passed": true,
+            "applicable": true,
             "detail": "",
             "meta": {}
           }

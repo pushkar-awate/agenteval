@@ -13,14 +13,25 @@ class CaseResult:
         self.error = error
 
     @property
+    def evaluated(self):
+        """Did we get a verdict at all? A crash is a (failing) verdict; a case
+        where every judge abstained is genuinely un-evaluated, not a failure."""
+        if self.error is not None:
+            return True
+        return any(getattr(j, "applicable", True) for j in self.judgements)
+
+    @property
     def passed(self):
-        return self.error is None and all(j.passed for j in self.judgements)
+        if self.error is not None:
+            return False
+        applicable = [j for j in self.judgements if getattr(j, "applicable", True)]
+        return bool(applicable) and all(j.passed for j in applicable)
 
     def to_dict(self):
         return {"id": self.case.id, "input": self.case.input,
                 "expected": self.case.expected, "output": self.output,
                 "latency_ms": round(self.latency_ms, 2), "error": self.error,
-                "passed": self.passed,
+                "passed": self.passed, "evaluated": self.evaluated,
                 "judgements": [j.to_dict() for j in self.judgements]}
 
 

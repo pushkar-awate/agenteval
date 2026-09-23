@@ -180,6 +180,65 @@ def test_cost_estimate_in_scorecard():
           % (card["llm_calls"], card["est_tokens"], card["est_cost_usd"]))
 
 
+class _DeadBrain(MockBrain):
+    """LLM call that always fails (429/timeout/empty) - the judge must abstain."""
+    def complete(self, prompt):
+        return ""
+
+
+def test_abstain_is_neutral_not_a_failure():
+    # a flaky LLM judge alongside a real one must NOT drag task success down
+    from evalcore.judges import faithfulness_judge
+    run = run_eval(classify, _cases(), [ExactMatch(), faithfulness_judge(_DeadBrain())])
+    card = scorecard(run)
+    assert card["task_success"] == 100, "dead LLM judge must not fail the agent"
+    assert card["unevaluated_cases"] == 0, "exact_match still evaluates every case"
+    assert "faithfulness" not in card["per_judge_pass_rate"], "fully-abstained judge is not reported"
+    print("PASS: abstaining LLM judge is neutral (task success stays 100%)")
+
+
+def test_all_abstain_marks_cases_unevaluated():
+    from evalcore.judges import faithfulness_judge
+    cases = _cases()[:4]
+    card = scorecard(run_eval(classify, cases, [faithfulness_judge(_DeadBrain())]))
+    assert card["evaluated_cases"] == 0 and card["unevaluated_cases"] == 4,         "if every judge abstains, cases are un-evaluated, not failed"
+    print("PASS: all-abstain -> cases un-evaluated (not fake 0%% or 100%%)")
+
+
+def test_cost_excludes_cache_hits():
+    import tempfile, os as _os, shutil
+    from evalcore.judges import faithfulness_judge
+    tmp = tempfile.mkdtemp()
+    try:
+        cache = JSONLCache(_os.path.join(tmp, "c.jsonl"))
+        card1 = scorecard(run_eval(classify, _cases()[:3],
+                                   [faithfulness_judge(_CountingStubBrain(90), cache=cache)]),
+                          price_per_1k_tokens=0.5)
+        card2 = scorecard(run_eval(classify, _cases()[:3],
+                                   [faithfulness_judge(_CountingStubBrain(90), cache=cache)]),
+                          price_per_1k_tokens=0.5)
+        assert card1["llm_calls"] == 3 and card1["est_cost_usd"] > 0
+        assert card2["llm_calls"] == 0 and card2["llm_cache_hits"] == 3, "cached run: 0 billed calls"
+        assert card2["est_cost_usd"] == 0.0, "a fully-cached run costs $0"
+        print("PASS: cost/calls exclude cache hits (re-run bills nothing)")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_llm_judge_score_scale():
+    from evalcore.judges import LLMJudge
+    c = EvalCase("1", "q", expected="e")
+    def brain_returning(resp):
+        b = MockBrain(); b.complete = lambda p: resp; return b
+    assert LLMJudge(brain_returning('{"score": 0.9}'), "r", name="x").score(c, "a").passed, "0-1 scale"
+    assert LLMJudge(brain_returning('{"score": 85}'), "r", name="x").score(c, "a").passed, "0-100 scale"
+    assert not LLMJudge(brain_returning('{"score": 0}'), "r", name="x").score(c, "a").passed, "zero fails"
+    # an unparseable response is neutral (abstains), not a failure
+    j = LLMJudge(brain_returning('not json at all'), "r", name="x").score(c, "a")
+    assert not j.applicable, "unparseable response -> abstain (neutral)"
+    print("PASS: LLM score scale (0-1 and 0-100) + unparseable abstains")
+
+
 if __name__ == "__main__":
     test_judges()
     test_runner_and_scorecard()
@@ -193,4 +252,8 @@ if __name__ == "__main__":
     test_llm_judge_abstains_on_mock_brain()
     test_format_and_guardrail_judges()
     test_cost_estimate_in_scorecard()
+    test_abstain_is_neutral_not_a_failure()
+    test_all_abstain_marks_cases_unevaluated()
+    test_cost_excludes_cache_hits()
+    test_llm_judge_score_scale()
     print("\nAll tests passed.")

@@ -17,12 +17,13 @@ _INFORMATIONAL = ("latency_p50_ms", "latency_p95_ms", "errors")
 
 
 class Check:
-    def __init__(self, metric, baseline, candidate, gated, tolerance=0.0):
+    def __init__(self, metric, baseline, candidate, gated, tolerance=0.0, note=""):
         self.metric = metric
         self.baseline = baseline          # may be None (metric new in candidate)
         self.candidate = candidate
         self.gated = gated
         self.tolerance = tolerance
+        self.note = note
         self.delta = None if baseline is None else (candidate - baseline)
         # a gated metric passes only if it stays within tolerance of the baseline
         self.passed = (not gated) or baseline is None or \
@@ -31,7 +32,7 @@ class Check:
     def to_dict(self):
         return {"metric": self.metric, "baseline": self.baseline,
                 "candidate": self.candidate, "delta": self.delta,
-                "gated": self.gated, "passed": self.passed}
+                "gated": self.gated, "passed": self.passed, "note": self.note}
 
 
 class GateResult:
@@ -73,8 +74,9 @@ def regression_gate(candidate, baseline, tolerance=0.0, gated=None):
     bj, cj = _judges(baseline), _judges(candidate)
     for name in bj:                                   # judges present at baseline
         metric = "judge:%s" % name
+        note = "judge absent in candidate run" if name not in cj else ""
         checks.append(Check(metric, bj.get(name), cj.get(name, 0),
-                            is_gated(metric, True), tolerance))
+                            is_gated(metric, True), tolerance, note=note))
     for name in cj:                                   # judges new in candidate
         if name not in bj:
             metric = "judge:%s" % name
@@ -95,6 +97,8 @@ def render_gate(result):
         base = " n/a " if c.baseline is None else ("%5.1f" % c.baseline)
         delta = "  -  " if c.delta is None else ("%+5.1f" % c.delta)
         flag = "" if c.passed else "  <-- REGRESSION"
+        if c.note:
+            flag += " (%s)" % c.note
         lines.append("  [%s] %-22s %s -> %5.1f  (%s)%s"
                      % (tag, c.metric, base, c.candidate, delta, flag))
     if result.regressions:

@@ -1,0 +1,5 @@
+# The agenteval core (agentcore + evalcore) is pure Python standard library.
+# Later milestones add:
+#   streamlit>=1.30            # the dashboard UI
+#   sentence-transformers      # embedding judge (CPU)
+# Optional: set GROQ_API_KEY to enable the LLM-as-judge.

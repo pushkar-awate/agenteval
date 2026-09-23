@@ -1,0 +1,12 @@
+{"id": "b1", "input": "I want a refund for last month's invoice", "expected": "billing", "tags": ["billing"]}
+{"id": "b2", "input": "Why was I charged twice this month?", "expected": "billing", "tags": ["billing"]}
+{"id": "b3", "input": "Please update my subscription plan", "expected": "billing", "tags": ["billing"]}
+{"id": "t1", "input": "The app keeps crashing on startup", "expected": "technical", "tags": ["technical"]}
+{"id": "t2", "input": "I get a 500 error when I try to log in", "expected": "technical", "tags": ["technical"]}
+{"id": "t3", "input": "The password reset link is broken", "expected": "technical", "tags": ["technical"]}
+{"id": "a1", "input": "How do I change my email address?", "expected": "account", "tags": ["account"]}
+{"id": "a2", "input": "Please delete my account permanently", "expected": "account", "tags": ["account"]}
+{"id": "s1", "input": "Where is my package? It hasn't arrived yet", "expected": "shipping", "tags": ["shipping"]}
+{"id": "s2", "input": "Can you track my order status?", "expected": "shipping", "tags": ["shipping"]}
+{"id": "o1", "input": "Thanks for the excellent support today", "expected": "other", "tags": ["other"]}
+{"id": "o2", "input": "What are your office hours?", "expected": "other", "tags": ["other"]}

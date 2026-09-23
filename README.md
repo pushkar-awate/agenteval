@@ -46,15 +46,50 @@ same runner, judges and metrics evaluate a different system. It is built on the
 reusable [`agentcore`](https://github.com/pushkar-awate/jobfit-agent) runtime,
 the third app on that core.
 
+## Regression gate - the wedge
+
+Scoring an agent once is easy; catching the day a prompt or model change quietly
+makes it *worse* is the hard part. agenteval stores a run as a **baseline** and
+gates every later run against it: if a gated metric drops, the gate fails, so a
+worse agent never ships. This is exactly selfheal-mlops' promotion guardrail,
+lifted from a tabular model up to an LLM agent.
+
+```
+# store a known-good run as the baseline (a single committed file)
+python -m evalcore.run --set-baseline
+
+# later, in CI: run again and gate against that baseline
+python -m evalcore.run --gate          # exits non-zero on a gated regression
+```
+
+A healthy change passes; a broken one is blocked, with the offending metrics named:
+
+```
+$ python -m evalcore.run --degrade --gate   # a "prompt change" that broke one intent
+regression gate: FAIL
+  [gate] task_success       100.0 ->  75.0  (-25.0)  <-- REGRESSION
+  [gate] judge:exact_match  100.0 ->  75.0  (-25.0)  <-- REGRESSION
+BLOCKED: gated regression in task_success, judge:exact_match
+```
+
+Every metric is either **gated** (a drop fails the gate - task success, judge
+pass rates) or **informational** (reported, never blocks - latency, error
+count). `--tolerance` sets how many points a gated metric may slip before it
+fails. The baseline is one committed `baseline.json` (scorecard plus full
+traces), so CI can gate a pull request with just that file - no database.
+
 ## Project layout
 
 ```
-agentcore/   reusable runtime shared with jobfit-agent and selfheal-mlops
-evalcore/    the eval engine (dataset, judges, runner, metrics)
-app/         the system-under-test being evaluated + its labelled cases
-tests/       runnable with plain python (no pytest)
-SPEC.md      full spec and build checklist
+agentcore/     reusable runtime shared with jobfit-agent and selfheal-mlops
+evalcore/      the eval engine: dataset, judges, runner, metrics,
+               registry (versioned runs + baseline) and gate (regression guard)
+app/           the system-under-test being evaluated + its labelled cases
+baseline.json  the committed baseline the regression gate scores runs against
+tests/         runnable with plain python (no pytest)
+SPEC.md        full spec and build checklist
 ```
 
-See `SPEC.md` for the roadmap (registry + regression gate, LLM judges,
-dashboard, CI gate). Core is pure standard library; Python 3.8+.
+The registry and regression gate are in (M1). See `SPEC.md` for what's next:
+LLM-as-judge (faithfulness/relevance), a Streamlit dashboard, and a GitHub
+Actions eval gate. Core is pure standard library; Python 3.8+.

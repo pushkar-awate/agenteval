@@ -1,0 +1,224 @@
+{
+  "version": "demo-v1",
+  "saved_at": "2026-09-23T05:18:38Z",
+  "scorecard": {
+    "version": "demo-v1",
+    "n_cases": 12,
+    "task_success": 100,
+    "per_judge_pass_rate": {
+      "exact_match": 100
+    },
+    "errors": 0,
+    "latency_p50_ms": 0.01,
+    "latency_p95_ms": 0.06
+  },
+  "run": {
+    "version": "demo-v1",
+    "results": [
+      {
+        "id": "b1",
+        "input": "I want a refund for last month's invoice",
+        "expected": "billing",
+        "output": "billing",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "b2",
+        "input": "Why was I charged twice this month?",
+        "expected": "billing",
+        "output": "billing",
+        "latency_ms": 0.0,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "b3",
+        "input": "Please update my subscription plan",
+        "expected": "billing",
+        "output": "billing",
+        "latency_ms": 0.0,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "t1",
+        "input": "The app keeps crashing on startup",
+        "expected": "technical",
+        "output": "technical",
+        "latency_ms": 0.0,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "input": "I get a 500 error when I try to log in",
+        "expected": "technical",
+        "output": "technical",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "input": "The password reset link is broken",
+        "expected": "technical",
+        "output": "technical",
+        "latency_ms": 0.0,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "a1",
+        "input": "How do I change my email address?",
+        "expected": "account",
+        "output": "account",
+        "latency_ms": 0.0,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "a2",
+        "input": "Please delete my account permanently",
+        "expected": "account",
+        "output": "account",
+        "latency_ms": 0.12,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "s1",
+        "input": "Where is my package? It hasn't arrived yet",
+        "expected": "shipping",
+        "output": "shipping",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "input": "Can you track my order status?",
+        "expected": "shipping",
+        "output": "shipping",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "o1",
+        "input": "Thanks for the excellent support today",
+        "expected": "other",
+        "output": "other",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "id": "o2",
+        "input": "What are your office hours?",
+        "expected": "other",
+        "output": "other",
+        "latency_ms": 0.01,
+        "error": null,
+        "passed": true,
+        "judgements": [
+          {
+            "name": "exact_match",
+            "score": 1.0,
+            "passed": true,
+            "detail": ""
+          }
+        ]
+      }
+    ]
+  }
+}

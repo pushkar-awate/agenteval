@@ -82,6 +82,22 @@ count). `--tolerance` sets how many points a gated metric may slip before it
 fails. The baseline is one committed `baseline.json` (scorecard plus full
 traces), so CI can gate a pull request with just that file - no database.
 
+## Dashboard
+
+A Streamlit dashboard is the human view of the same engine the CLI and CI use:
+pick a system-under-test, run the eval, and see the scorecard, a
+baseline-vs-candidate eval-drift chart, the pass/fail regression verdict, and a
+per-case trace viewer (input, output, every judge). Toggle the degraded agent to
+watch the gate catch a regression live.
+
+```
+streamlit run streamlit_app.py
+```
+
+It deploys on Streamlit Cloud with only `streamlit` as a dependency (the core is
+standard library); set `GROQ_API_KEY` in the app secrets to enable the
+LLM-as-judge.
+
 ## Project layout
 
 ```
@@ -89,12 +105,13 @@ agentcore/     reusable runtime shared with jobfit-agent and selfheal-mlops
 evalcore/      the eval engine: dataset, judges, runner, metrics,
                registry (versioned runs + baseline) and gate (regression guard)
 app/           the system-under-test being evaluated + its labelled cases
+streamlit_app.py  the dashboard (run eval, drift chart, verdict, traces)
 baseline.json  the committed baseline the regression gate scores runs against
 tests/         runnable with plain python (no pytest)
 SPEC.md        full spec and build checklist
 ```
 
-The registry + regression gate (M1) and the LLM-as-judge, format/guardrail
-metrics and response caching (M2) are in. See `SPEC.md` for what's next: a
-Streamlit dashboard (M3) and a GitHub Actions eval gate (M4). The core is pure
-standard library; the LLM judge is opt-in via `--llm` and a free `GROQ_API_KEY`.
+The regression gate (M1), the LLM-as-judge + format/guardrail metrics + caching
+(M2), and the Streamlit dashboard (M3) are in. Next is a GitHub Actions eval
+gate (M4). The core is pure standard library; the LLM judge is opt-in via
+`--llm` and a free `GROQ_API_KEY`.

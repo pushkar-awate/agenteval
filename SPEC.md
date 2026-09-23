@@ -41,7 +41,7 @@ format adherence | guardrail pass rate | latency p50/p95 | est. cost | stability
 - [x] M1 - registry + regression gate (the eval-drift wedge).
 - [x] M2 - LLMJudge (faithfulness/relevance) + guardrail/format metrics +
   latency/cost + response caching.
-- [ ] M3 - Streamlit dashboard (metric table, eval-drift chart, verdict, traces).
+- [x] M3 - Streamlit dashboard (metric table, eval-drift chart, verdict, traces).
 - [ ] M4 - GitHub Actions eval + regression gate + badge.
 - [ ] M5 - PyTorch LoRA judge (Colab) + Terraform/LocalStack infra module.
 - [ ] M6 - README with the "eval drift for agents" framing, demo GIF, limits.

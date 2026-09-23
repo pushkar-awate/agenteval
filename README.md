@@ -2,6 +2,8 @@
 
 [![eval](https://github.com/pushkar-awate/agenteval/actions/workflows/eval.yml/badge.svg)](https://github.com/pushkar-awate/agenteval/actions/workflows/eval.yml)
 
+**Try it live: https://agenteval-pushkar.streamlit.app**
+
 An eval + observability harness for LLM agents. It answers the question every
 team shipping agents keeps asking: **"did that prompt or model change make my
 agent better, or did I just quietly break it?"**
@@ -86,7 +88,8 @@ traces), so CI can gate a pull request with just that file - no database.
 
 ## Dashboard
 
-A Streamlit dashboard is the human view of the same engine the CLI and CI use:
+A Streamlit dashboard ([live](https://agenteval-pushkar.streamlit.app)) is the
+human view of the same engine the CLI and CI use:
 pick a system-under-test, run the eval, and see the scorecard, a
 baseline-vs-candidate eval-drift chart, the pass/fail regression verdict, and a
 per-case trace viewer (input, output, every judge). Toggle the degraded agent to

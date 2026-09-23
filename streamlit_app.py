@@ -24,6 +24,15 @@ from app.demo_target import classify
 
 st.set_page_config(page_title="agenteval", page_icon="✅", layout="wide")
 
+# Streamlit Cloud serves secrets via st.secrets; agentcore's GroqBrain reads
+# os.environ. Bridge the key across so the LLM-as-judge is detected when a
+# GROQ_API_KEY secret is set (no-op locally / when it isn't).
+try:
+    if "GROQ_API_KEY" in st.secrets and not os.environ.get("GROQ_API_KEY"):
+        os.environ["GROQ_API_KEY"] = str(st.secrets["GROQ_API_KEY"])
+except Exception:
+    pass
+
 CASES = os.path.join(ROOT, "app", "cases", "demo_cases.jsonl")
 BASELINE = os.path.join(ROOT, "baseline.json")
 

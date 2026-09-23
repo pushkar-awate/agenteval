@@ -1,0 +1,23 @@
+name: eval
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run test suite
+        run: python tests/test_eval.py
+      - name: Regression gate (fails on eval drift vs the committed baseline)
+        # Runs the agent and compares its scorecard to baseline.json; a gated
+        # metric dropping past the tolerance exits non-zero and fails CI, so a
+        # change that makes the agent worse can't merge.
+        run: python -m evalcore.run --gate

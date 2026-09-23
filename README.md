@@ -1,5 +1,7 @@
 # agenteval
 
+[![eval](https://github.com/pushkar-awate/agenteval/actions/workflows/eval.yml/badge.svg)](https://github.com/pushkar-awate/agenteval/actions/workflows/eval.yml)
+
 An eval + observability harness for LLM agents. It answers the question every
 team shipping agents keeps asking: **"did that prompt or model change make my
 agent better, or did I just quietly break it?"**
@@ -111,7 +113,9 @@ tests/         runnable with plain python (no pytest)
 SPEC.md        full spec and build checklist
 ```
 
-The regression gate (M1), the LLM-as-judge + format/guardrail metrics + caching
-(M2), and the Streamlit dashboard (M3) are in. Next is a GitHub Actions eval
-gate (M4). The core is pure standard library; the LLM judge is opt-in via
-`--llm` and a free `GROQ_API_KEY`.
+The regression gate (M1), LLM-as-judge + format/guardrail metrics + caching
+(M2), Streamlit dashboard (M3), and the GitHub Actions eval gate (M4) are all in
+- every push runs the tests and gates the agent against the committed baseline.
+The core is pure standard library; the LLM judge is opt-in via `--llm` and a
+free `GROQ_API_KEY`. See `SPEC.md` for optional stretch work (M5 LoRA judge +
+Terraform, M6 polish).

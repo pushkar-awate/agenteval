@@ -1,0 +1,13 @@
+# Free local AWS for `terraform apply` - no cloud account, no cost.
+#   docker compose up -d      # start LocalStack on :4566
+#   terraform init && terraform apply -auto-approve
+services:
+  localstack:
+    image: localstack/localstack:3
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,dynamodb
+      - DEBUG=0
+    volumes:
+      - "./.localstack:/var/lib/localstack"

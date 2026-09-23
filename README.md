@@ -103,6 +103,19 @@ It deploys on Streamlit Cloud with only `streamlit` as a dependency (the core is
 standard library); set `GROQ_API_KEY` in the app secrets to enable the
 LLM-as-judge.
 
+## Self-hosted judge & infra (optional)
+
+Two extras that round out the story:
+
+- **`notebooks/lora_judge_colab.ipynb`** trains a small LoRA adapter as a
+  faithfulness judge on a free Colab GPU, then loads it CPU-side - a self-hosted
+  judge that plugs into the same `Judge` interface as the deterministic and
+  hosted-LLM judges, with no per-call cost.
+- **`infra/`** is a Terraform module provisioning the cloud backing for eval
+  history (a versioned S3 bucket for baselines/runs + a DynamoDB run index). It
+  runs free and offline against LocalStack, so `terraform apply` needs no AWS
+  account.
+
 ## Project layout
 
 ```
@@ -112,13 +125,14 @@ evalcore/      the eval engine: dataset, judges, runner, metrics,
 app/           the system-under-test being evaluated + its labelled cases
 streamlit_app.py  the dashboard (run eval, drift chart, verdict, traces)
 baseline.json  the committed baseline the regression gate scores runs against
+infra/         Terraform module (S3 + DynamoDB) for hosted run storage, LocalStack-ready
+notebooks/     a LoRA-trained, CPU-served faithfulness judge (free Colab GPU)
 tests/         runnable with plain python (no pytest)
 SPEC.md        full spec and build checklist
 ```
 
 The regression gate (M1), LLM-as-judge + format/guardrail metrics + caching
-(M2), Streamlit dashboard (M3), and the GitHub Actions eval gate (M4) are all in
-- every push runs the tests and gates the agent against the committed baseline.
-The core is pure standard library; the LLM judge is opt-in via `--llm` and a
-free `GROQ_API_KEY`. See `SPEC.md` for optional stretch work (M5 LoRA judge +
-Terraform, M6 polish).
+(M2), Streamlit dashboard (M3), CI eval gate (M4), and the self-hosted LoRA
+judge + Terraform/LocalStack infra module (M5) are all in - every push runs the
+tests and gates the agent against the committed baseline. The core is pure
+standard library; the LLM judge is opt-in via `--llm` and a free `GROQ_API_KEY`.

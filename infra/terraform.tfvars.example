@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars and edit. Defaults already target LocalStack.
+project        = "agenteval"
+environment    = "dev"
+region         = "us-east-1"
+use_localstack = true
+# For real AWS: set use_localstack = false and provide AWS credentials the
+# usual way (env vars, shared config, or an assumed role) - no keys go here.

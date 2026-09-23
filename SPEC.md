@@ -43,7 +43,7 @@ format adherence | guardrail pass rate | latency p50/p95 | est. cost | stability
   latency/cost + response caching.
 - [x] M3 - Streamlit dashboard (metric table, eval-drift chart, verdict, traces).
 - [x] M4 - GitHub Actions eval + regression gate + badge.
-- [ ] M5 - PyTorch LoRA judge (Colab) + Terraform/LocalStack infra module.
+- [x] M5 - PyTorch LoRA judge (Colab) + Terraform/LocalStack infra module.
 - [ ] M6 - README with the "eval drift for agents" framing, demo GIF, limits.
 
 ## Free-to-build notes / traps

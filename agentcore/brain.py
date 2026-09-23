@@ -1,7 +1,7 @@
 """The pluggable reasoning backend - the "brain".
 
-A brain is the swappable intelligence behind an agent (or, in agenteval, a
-judge). It exposes two task-agnostic methods:
+A brain is the swappable intelligence behind an agent (or a judge). It exposes
+two task-agnostic methods:
 
     decide(observation, tool_specs) -> Decision   # choose the next tool to run
     complete(prompt) -> str                        # do the actual LLM reasoning
@@ -10,11 +10,11 @@ MockBrain is deterministic and needs no key: `decide` follows a plan you give it
 (or the available tool order), and `complete` returns nothing - so a run is
 reproducible and key-free by default. GroqBrain overrides `complete` to reason
 with a hosted LLM; that is the ONLY method that touches the network, and it is
-task-agnostic - the caller supplies the prompt. In agenteval this is exactly
-what the LLM-as-judge calls to score a candidate answer.
+task-agnostic - the caller supplies the prompt.
 
-Note: nothing here is task-specific. An app's plan and its prompts live in the
-app layer, not in the shared brain - that is what makes the brain reusable.
+Nothing here is task-specific. An app's plan and its prompts live in the app
+layer, not in the shared brain - that is what makes this core reusable across
+jobfit-agent, selfheal-mlops and agenteval.
 """
 from __future__ import annotations
 import json
@@ -31,6 +31,30 @@ def extract_json(text):
     """Best-effort: pull the first {...} object out of an LLM reply."""
     start, end = text.find("{"), text.rfind("}")
     return text[start:end + 1] if start >= 0 and end > start else text
+
+
+def tool_names(tool_specs):
+    """Normalise a tool-spec collection to an ordered list of tool names.
+
+    Registries differ: some hand `decide` a dict {name: spec}, some a list of
+    names, some a list of {"name": ...} dicts. The brain shouldn't care."""
+    if not tool_specs:
+        return []
+    if isinstance(tool_specs, dict):
+        return list(tool_specs.keys())
+    names = []
+    for t in tool_specs:
+        if isinstance(t, str):
+            names.append(t)
+        elif isinstance(t, dict):
+            names.append(t.get("name"))
+    return names
+
+
+# agentcore's built-in control tools (see ToolRegistry / loop.py). A brain that
+# auto-derives a plan from the registry must skip these - they are how the loop
+# stops and flags problems, not task steps.
+CONTROL_TOOLS = ("finish", "raise_flag")
 
 
 class Brain:
@@ -54,7 +78,8 @@ class MockBrain(Brain):
 
     def decide(self, observation, tool_specs):
         completed = observation.get("completed", [])
-        plan = self.plan or [t.get("name") for t in (tool_specs or [])]
+        plan = self.plan or [n for n in tool_names(tool_specs)
+                             if n not in CONTROL_TOOLS]
         for tool in plan:
             if tool and tool not in completed:
                 return Decision(tool, {}, "plan step: %s" % tool)
@@ -93,7 +118,7 @@ class GroqBrain(MockBrain):
             self.URL, data=body, method="POST",
             headers={"Authorization": "Bearer %s" % self.api_key,
                      "Content-Type": "application/json",
-                     "User-Agent": "agenteval/1.0"})
+                     "User-Agent": "agentcore/1.0"})
         try:
             with urllib.request.urlopen(req, timeout=45) as r:
                 resp = json.loads(r.read().decode("utf-8"))
